@@ -16,15 +16,24 @@ import scipy
 import matplotlib.pyplot as plt
 import seaborn as sns
 from iaml01cw2_helpers import *
+import os
 
 from sklearn.cluster import KMeans
+
+file_path = os.path.join(os.getcwd(),'data')
+Xtrn,Ytrn,Xtst,Ytst = load_CoVoST2(file_path)
+
+
+
 #<----
-'''
+
 # Q3.1
 def iaml01cw2_q3_1():
+    kmeans = KMeans(n_clusters=22, random_state=1).fit(Xtrn)
+    kmeans.cluster_centers_.shape
 #
-# iaml01cw2_q3_1()   # comment this out when you run the function
-
+iaml01cw2_q3_1()   # comment this out when you run the function
+'''
 # Q3.2
 def iaml01cw2_q3_2():
 #
