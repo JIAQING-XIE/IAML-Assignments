@@ -23,7 +23,7 @@ from sklearn.metrics import accuracy_score,confusion_matrix
 from sklearn.decomposition import PCA
 from sklearn.svm import SVC
 from sklearn.multiclass import OneVsRestClassifier
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score,KFold
 #<----
 
 data_file = os.path.join(os.getcwd(),'data')
@@ -57,7 +57,8 @@ def iaml01cw2_q2_1():
     lr = LogisticRegression()
     lr.fit(Xtrn_nm,Ytrn)
     Ytst_pred = lr.predict(Xtst_nm)
-    print(accuracy_score(Ytst,Ytst_pred))   # print classification accuracy for test cases
+    print("Test Accuracy: {}".format(accuracy_score(Ytst,Ytst_pred)))   # print classification accuracy for test cases
+    print("Confusion Matrix:")
     print(confusion_matrix(Ytst, Ytst_pred)) # print confusion matrix for test cases
 
 #
@@ -69,7 +70,8 @@ def iaml01cw2_q2_2():
     svc.fit(Xtrn_nm, Ytrn)
     #svc.fit(Xtst_nm,Ytst)
     Ytst_pred =  svc.predict(Xtst_nm)
-    print(accuracy_score(Ytst,Ytst_pred))   # print classification accuracy for test cases
+    print("Test Accuracy: {}".format(accuracy_score(Ytst,Ytst_pred)))   # print classification accuracy for test cases
+    print("Confusion Matrix: ")
     print(confusion_matrix(Ytst, Ytst_pred)) # print confusion matrix for test cases
     
 
@@ -81,14 +83,11 @@ def iaml01cw2_q2_3():
     #1 Fit the model first
     lr = LogisticRegression()
     lr.fit(Xtrn_nm,Ytrn)           
-
-
-                                                                         
+                                                                
     # suit the new points with pca to original space
     # then predited labels with lr
     pca = PCA(n_components=2)
     z = pca.fit_transform(Xtrn_nm) # z.shape = (60000,2) // fit pca model
-
     std_pc1 = np.std(z[:,0]) # sigma_1
     std_pc2 = np.std(z[:,1]) # sigma_2
 
@@ -96,28 +95,33 @@ def iaml01cw2_q2_3():
     new_fit_y = np.linspace(-5 * std_pc2, 5 * std_pc2, 100)
 
     X,Y = np.meshgrid(new_fit_x, new_fit_y)
-    a = np.c_[X.ravel(), Y.ravel()]
+    a = np.c_[X.ravel(), Y.ravel()] # PCA space
 
     temp = pca.inverse_transform(a)
     pred = lr.predict(temp)
     pred1 = pred.reshape((100,100))
-    
-    plt.contourf(X, Y, pred1, cmap = 'coolwarm')
+    labels = [i for i in range(9)]
+    plt.contourf(X, Y, pred1, levels = labels, cmap = 'coolwarm')
+    plt.xlabel("Principal Component 1")
+    plt.ylabel("Principal Component 2")
     plt.colorbar()
     plt.savefig("IAML_CW2_Q2_3.png")
     plt.show()
     
 #
-#iaml01cw2_q2_3()   # comment this out when you run the function
+iaml01cw2_q2_3()   # comment this out when you run the function
 
 # Q2.4
 def iaml01cw2_q2_4():
     svc = SVC(kernel='rbf', C = 1.0, gamma='auto')
-    svc.fit(Xtrn_nm, Ytrn)                                                            
+    svc.fit(Xtrn_nm, Ytrn) 
+
+
     # suit the new points with pca to original space
     # then predited labels with lr
     pca = PCA(n_components=2)
     z = pca.fit_transform(Xtrn_nm) # z.shape = (60000,2) // fit pca model
+    
 
     std_pc1 = np.std(z[:,0]) # sigma_1
     std_pc2 = np.std(z[:,1]) # sigma_2
@@ -129,10 +133,18 @@ def iaml01cw2_q2_4():
 
     temp = pca.inverse_transform(a)
     pred = svc.predict(temp)
+    #pred = svc.predict(a)
     pred1 = pred.reshape((100,100))
+
+
+    cmap = plt.get_cmap('coolwarm', 10)
+
+    labels = [i for i in range(10)]
+    aa = plt.contourf(X, Y, pred1,  levels = labels, cmap = cmap)
     
-    plt.contourf(X, Y, pred1, cmap = 'coolwarm')
-    plt.colorbar()
+    plt.colorbar(aa)
+    plt.xlabel("Principal Component 1")
+    plt.ylabel("Principal Component 2")
     plt.savefig("IAML_CW2_Q2_4.png")
     plt.show()
 
@@ -160,12 +172,23 @@ def iaml01cw2_q2_5():
     
 
     mean_acc = []
+
+    maximum = 0
+    optimum_c = 0
+
     for param in c:
         print("param")
         svc = SVC(C=param, kernel='rbf', gamma='auto')
-        arr = cross_val_score(svc,Xsmall,Ysmall,cv=3)
+        arr = cross_val_score(svc,Xsmall,Ysmall,cv=KFold(3))
         mean_acc.append(arr.mean())
-    plt.figure(figsize=(10,10))
+        if maximum < arr.mean():
+            maximum = arr.mean()
+            optimum_c = param
+    
+    print("--------- Optimal Value --------")
+    print("Optimal C: {}".format(optimum_c))
+    print("Best Mean Accuracy: {}".format(maximum))
+
     plt.scatter(b,mean_acc)
     plt.xlabel("log-scale of C")
     plt.ylabel("mean accuracy (CV)")
@@ -191,5 +214,5 @@ def iaml01cw2_q2_6():
     print("training accuracy:{}".format(accuracy_score(Ytrn,Ytrn_pred)))
     print("test accuracy:{}".format(accuracy_score(Ytst,Ytst_pred)))
 #
-iaml01cw2_q2_6()   # comment this out when you run the function
+#iaml01cw2_q2_6()   # comment this out when you run the function
 

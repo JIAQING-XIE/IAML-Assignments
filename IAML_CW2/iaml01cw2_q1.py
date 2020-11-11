@@ -16,6 +16,8 @@ import pandas as pd
 import scipy
 import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib.colors as colors
+
 import os
 from iaml01cw2_helpers import *
 from sklearn.decomposition import PCA
@@ -48,6 +50,7 @@ Xtst_nm = Xtst - Xmean
 def iaml01cw2_q1_1():
     print(Xtrn_nm[0,0:4])
     print(Xtrn_nm[-1,0:4])
+ 
 
 #iaml01cw2_q1_1()   # comment this out when you run the function
 
@@ -61,10 +64,11 @@ def iaml01cw2_q1_2():
         for i in range(Xtrn_nm.shape[0]):
             if Ytrn[i] == j:
                 temp.append(i)
-        record.append(temp)
+        record.append(list(temp))
         #print(len(temp)) #each class 6000 samples
     record = np.array(record)   # id in each class
     #print(record.shape)         #(10,6000)
+    print(record.shape)
 
     dis = []
     vector = []
@@ -74,7 +78,7 @@ def iaml01cw2_q1_2():
         temp = []
         for j in range(record.shape[1] ):
             mean_vec = mean_vec + Xtrn_nm[record[i][j],:]
-        mean_vec = mean_vec / 6000
+        mean_vec = mean_vec / record.shape[1]
         vector.append(mean_vec)
         for j in range(record.shape[1]):
             a = np.linalg.norm(Xtrn_nm[record[i][j],:]-mean_vec) ### This is much faster than self-defined eucildean distance function
@@ -92,14 +96,14 @@ def iaml01cw2_q1_2():
         min_2 = np.append(min_2,max_2)
 
         index.append(list(min_2))
-    #print(index) # 1-largest, 2-largest, 2-smallest, 1-smallest (10,4)
+    #print(index) # 1-closet, 2-closet, 2-furthest, 1-furthest (10,4)
 
     #--------- print ---------#
     vector = np.array(vector)
 
 
 
-    f, axs = plt.subplots(10,5,figsize=(20,20))
+    f, axs = plt.subplots(10,5,figsize=(30,40))
 
     for i in range(10):
         for j in range(5):
@@ -108,16 +112,16 @@ def iaml01cw2_q1_2():
             if j == 0:
                 a = vector[i,:].reshape((28,28))
                 plt.imshow(a, cmap = "gray_r")
-                plt.title("mean_vector of class: {}".format(i),y=-0.2)
+                plt.title("mean vector of class: {}".format(i),y=-0.2,fontsize=24,fontweight='bold')
             else:
                 a = Xtrn_nm[record[i][index[i][j-1]],:].reshape((28,28))
                 plt.imshow(a, cmap = "gray_r")
-                plt.title("class: {}, sample: {}".format(i,record[i][index[i][j-1]]),y=-0.2)
+                plt.title("class: {}, id: {}".format(i,record[i][index[i][j-1]]),y=-0.2,fontsize=24,fontweight='bold')
     
     plt.savefig("IAML_CW2_Q1_2.png")
         
                 
-# iaml01cw2_q1_2()   # comment this out when you run the function
+#iaml01cw2_q1_2()   # comment this out when you run the function
 
 # Q1.3
 def iaml01cw2_q1_3():
@@ -134,12 +138,59 @@ def iaml01cw2_q1_4():
     pca = PCA()
     pca.fit(Xtrn_nm)
     
-    print(pca.explained_variance_ratio_) #pca n principal components fit
-    plt.plot(x,pca.explained_variance_ratio_.cumsum())
+    #print(pca.explained_variance_ratio_) #pca n principal components fit
+
+    y = pca.explained_variance_ratio_.cumsum()
+    
+    x90 = 0
+    y90 = 0
+
+    x95 = 0
+    y95 = 0
+
+    x99 = 0
+    y99 = 0
+
+    mini90 = 1
+    mini95 = 1
+    mini99 = 1
+
+    for i in range(len(y)):
+        if abs(y[i]-0.9)< mini90 and y[i] > 0.9:
+            mini90 = abs(y[i]-0.9)
+            y90 = y[i]
+            x90 = i
+        else:
+            if abs(y[i] -0.95) < mini95 and y[i] > 0.95:
+                mini95 = abs(y[i] -0.95)
+                y95 = y[i]
+                x95 = i
+            else:
+                if abs(y[i] -0.99) < mini99 and y[i] > 0.99:
+                    mini99 = abs(y[i] -0.99)
+                    y99 = y[i]
+                    x99 = i
+
+
+    
+
+    x = [i for i in range(len(y))]
+    plt.plot(x,y)
+    plt.xlabel("Number of Principal Compoents (N)")
+    plt.ylabel("Cumulative explained variance ratio (R)")
+    #----- Speical percentile, like 90% and 95% -----#
+    plt.scatter(x90, y90, c = 'red')
+    plt.scatter(x95, y95, c = 'red')
+    plt.scatter(x99, y99, c = 'red')
+
+    plt.text(x90 + 10, y90 - 0.03, (round(x90, 2), round(y90,2)), color='b')
+    plt.text(x95 + 10, y95 - 0.03, (round(x95, 2), round(y95,2)), color='b')
+    plt.text(x99 + 10, y99 - 0.04, (round(x99, 2), round(y99,2)), color='b')
+
     plt.savefig("IAML_CW2_Q1_4.png")
     plt.show()
 #
-# iaml01cw2_q1_4()   # comment this out when you run the function
+#iaml01cw2_q1_4()   # comment this out when you run the function
 
 
 # Q1.5
@@ -189,8 +240,8 @@ def iaml01cw2_q1_6():
         for j in b:
             temp.append(sqrt(mse(Xtrn_nm[j,:], x_recovered[j,:])))
         rmse.append(temp)
-
-
+        
+    rmse = np.array(rmse).T
     np.savetxt('Q1_6_ans.txt', rmse)
 
 
@@ -208,7 +259,7 @@ def iaml01cw2_q1_7():
             b[Ytrn[i]] = i
             a[Ytrn[i]] = a[Ytrn[i]] + 1
     
-    f, axs = plt.subplots(10,4,figsize=(20,20))
+    f, axs = plt.subplots(10,4,figsize=(30,40))
     count = 0
     for ii in K:
         count = count + 1
@@ -221,7 +272,7 @@ def iaml01cw2_q1_7():
             plt.subplot(10,4, (count -1) + 4 * count2+1)
             plt.imshow((x_recovered[j,:] + Xmean).reshape((28,28)), cmap ="gray_r")
             plt.axis('off')
-            plt.title("class : {}, reconstructed, K = {}".format(Ytrn[j] , ii), y = -0.4)
+            plt.title("class : {}, K = {}".format(Ytrn[j] , ii), y = -0.4, fontsize=30,fontweight='bold')
             count2 = count2 + 1
 
     plt.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=0.5,
@@ -240,12 +291,27 @@ def iaml01cw2_q1_8():
 
     pca = PCA(n_components=2)
     x_reduced = pca.fit_transform(Xtrn_nm)
-    #plt.figure(figsize=(20,20))
-    fig, ax = plt.subplots(figsize=(15,15))
-    scatter = ax.scatter(x_reduced[:,0], x_reduced[:,1], c = Ytrn ,cmap="coolwarm")
-    legend1 = ax.legend(*scatter.legend_elements(num=10),
-                    loc="upper left", title="Classes",fontsize = 20)
-    ax.add_artist(legend1)
+    plt.figure(figsize=(20,20))
+    ax = plt.subplot(1,1,1,)
+
+    
+    print(x_reduced[np.where(Ytrn == 1),0].reshape((6000,)))
+
+    #------ plot -------#
+    values = range(10)
+    cNorm  = colors.Normalize(vmin=0, vmax=values[-1])
+    scaMap = plt.cm.ScalarMappable(norm = cNorm  ,cmap = "coolwarm")
+    for i in range(10):
+        colorval = scaMap.to_rgba(values[i])
+        ax.scatter(x_reduced[np.where(Ytrn == i),0].reshape((6000,)), x_reduced[np.where(Ytrn == i),1].reshape((6000,)),label = i, s =2, color = colorval)
+    #ax.scatter(x_reduced[:,0], x_reduced[:,1], s =2, c = Ytrn ,cmap="coolwarm")
+    
+
+
+
+
+    handles,labels = ax.get_legend_handles_labels()
+    ax.legend(handles, labels, loc='upper right',fontsize = 20)
     plt.xlabel("Principal Component 1",fontsize = 20)
     plt.ylabel("Principal Component 2", fontsize = 20)
     
