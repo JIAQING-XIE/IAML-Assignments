@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from iaml01cw2_helpers import *
 import os
+import pandas as pd
 
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
@@ -62,6 +63,7 @@ def iaml01cw2_q3_1():
 
 # Q3.2
 def iaml01cw2_q3_2():
+
     mean_vector = []
 
     for j in range(22):
@@ -70,42 +72,60 @@ def iaml01cw2_q3_2():
         mean_vector.append(list(temp.mean(axis = 0)))
     mean_vector = np.array(mean_vector) # mean vector of each class (22, 26)
 
-
-    pca = PCA(n_components=2)
+    kmeans = KMeans(n_clusters=22, random_state=1).fit(Xtrn)
+    centers = kmeans.cluster_centers_
     
 
-    kmeans = KMeans(n_clusters=22, random_state=1).fit(Xtrn)
-
+    pca = PCA(n_components=2)
     zz = pca.fit_transform(mean_vector) # PCA on mean vector 
-
-
-
-    centers = kmeans.cluster_centers_
     center_ = pca.transform(centers)
-    plt.figure(figsize=(10,10))
+    lang =[i for i in range(22)]
 
-
-
-
-    plt.scatter(center_[:, 0], center_[:, 1], c='blue', s= 1)
-    plt.scatter(zz[:, 0], zz[:, 1], c='red',s = 1)
-
+    # ------- plot --------#
+    plt.figure(figsize=(15,15))
+    plt.scatter(center_[:, 0], center_[:, 1], c='blue', label ='cluster centers', s = 12)
+    for i in range(center_.shape[0]):
+        plt.annotate(lang[i],xy = (center_[i, 0], center_[i, 1]),xytext = (center_[i, 0]+0.01, center_[i, 1]+0.01), color = 'blue', size = 16)
+    plt.scatter(zz[:, 0], zz[:, 1], c='red', label = 'mean vectors', s= 12)
+    for i in range(zz.shape[0]):
+        plt.annotate(lang[i],xy = (zz[i, 0], zz[i, 1]),xytext = (zz[i, 0]+0.01, zz[i, 1]+0.01), color = 'red', size = 16)
+    plt.xlabel('Principal Component 1', fontsize = 20)
+    plt.ylabel('Principal Component 2', fontsize = 20)
+    plt.legend()
     plt.savefig("IAML_CW2_Q3_2.png")
     plt.show()
 
 #
-iaml01cw2_q3_2()   # comment this out when you run the function
+#iaml01cw2_q3_2()   # comment this out when you run the function
 
 # Q3.3
 def iaml01cw2_q3_3():
+
+    # read file
+    file_path = os.path.join(os.getcwd(), 'data')
+    lang = pd.read_csv(file_path + '/languages.txt',header = None, sep= ' ')
+    lang_label = []
+    # add appropriate labels
+    for i in range(22):
+        if i <10:
+            lang_label.append(lang.iloc[i,2])
+        else:
+            lang_label.append(lang.iloc[i,1])
+
+    
+
+    
     mean_vector = []
+    
     for j in range(22):
         temp = Xtrn[np.where(Ytrn == j)]
         mean_vector.append(list(temp.mean(axis = 0)))
     mean_vector = np.array(mean_vector) # mean vector of each class (22, 26)
-    
+    plt.figure(figsize=(10,10))
     Z = sch.linkage(mean_vector, method =  'ward')
-    p = sch.dendrogram(Z, orientation='right')
+    p = sch.dendrogram(Z, orientation='right', labels= lang_label)
+    plt.xlabel("distance (Ward)", fontsize = 20)
+    plt.ylabel("Languages", fontsize = 20)
     plt.savefig('IAML_CW2_Q3_3.png')
     
     plt.show()
@@ -115,7 +135,23 @@ def iaml01cw2_q3_3():
 
 # Q3.4
 def iaml01cw2_q3_4():
-    kmeans = KMeans(n_clusters=3, random_state=1)
+
+    # read file
+    file_path = os.path.join(os.getcwd(), 'data')
+    lang = pd.read_csv(file_path + '/languages.txt',header = None, sep= ' ')
+    lang_label = []
+    # add appropriate labels
+    for i in range(22):
+        if i <10:
+            for k in range(3):
+                lang_label.append(lang.iloc[i,3] + ' ' + str(k))
+        else:
+            for k in range(3):
+                lang_label.append(lang.iloc[i,2] + '' + str(k))
+
+    print(lang_label)
+
+    kmeans = KMeans(n_clusters=3, random_state=1) # apply k-Means algorithm
     clusters = []
     for i in range(22):
         kmeans.fit(Xtrn[np.where(Ytrn == i)])
@@ -123,28 +159,34 @@ def iaml01cw2_q3_4():
             clusters.append(kmeans.cluster_centers_[j,:])
     clusters = np.array(clusters)
     print(clusters)
-    plt.figure(figsize=(20,20))
+    plt.figure(figsize=(13,5))
     Z = sch.linkage(clusters, method = 'ward')
-    p = sch.dendrogram(Z)
-    plt.savefig("Q3_4_ward.png")
+    p = sch.dendrogram(Z, labels=lang_label,leaf_rotation=45)
+    plt.xlabel('Language Cluster Centers', fontsize = 10)
+    plt.ylabel('distance (ward)', fontsize = 15)
+    plt.savefig("IAML_CW2_Q3_4_ward.png")
     plt.show()
     
-    plt.figure(figsize=(20,20))
+    plt.figure(figsize=(13,5))
     Z = sch.linkage(clusters, method = 'single')
-    p = sch.dendrogram(Z)
-    plt.savefig("Q3_4_single.png")
+    p = sch.dendrogram(Z, labels=lang_label,leaf_rotation=45)
+    plt.xlabel('Language Cluster Centers', fontsize = 10)
+    plt.ylabel('distance (single)', fontsize = 15)
+    plt.savefig("IAML_CW2_Q3_4_single.png")
     plt.show()
     
-    plt.figure(figsize=(20,20))
+    plt.figure(figsize=(13,5))
     Z = sch.linkage(clusters, method = 'complete')
-    p = sch.dendrogram(Z)
-    plt.savefig("Q3_4_complete.png")
+    p = sch.dendrogram(Z, labels=lang_label,leaf_rotation=45)
+    plt.xlabel('Language Cluster Centers', fontsize = 10)
+    plt.ylabel('distance (complete)', fontsize = 15)
+    plt.savefig("IAML_CW2_Q3_4_complete.png")
     plt.show()
     
 
 
 #
-#iaml01cw2_q3_4()   # comment this out when you run the function
+iaml01cw2_q3_4()   # comment this out when you run the function
 
 # Q3.5
 def iaml01cw2_q3_5():

@@ -109,7 +109,7 @@ def iaml01cw2_q2_3():
     plt.show()
     
 #
-iaml01cw2_q2_3()   # comment this out when you run the function
+#iaml01cw2_q2_3()   # comment this out when you run the function
 
 # Q2.4
 def iaml01cw2_q2_4():

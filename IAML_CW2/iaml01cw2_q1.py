@@ -1,14 +1,5 @@
 
-##########################################################
-#  Python script template for Question 1 (IAML Level 10)
-#  Note that
-#  - You should not change the filename of this file, 'iaml01cw2_q1.py', which is the file name you should use when you submit your code for this question.
-#  - You should define the functions shown below in your code.
-#  - You can define function arguments (parameters) and returns (attributes) if necessary.
-#  - In case you define helper functions, do not define them here, but put them in a separate Python module file, "iaml01cw2_my_helpers.py", and import it in this script.
-#  - For those questions requiring you to show results in tables, your code does not need to present them in tables - just showing them with print() is fine.
-#  - You do not need to include this header in your submission
-##########################################################
+
 
 #--- Code for loading the data set and pre-processing --->
 import numpy as np
@@ -77,11 +68,11 @@ def iaml01cw2_q1_2():
         
         temp = []
         for j in range(record.shape[1] ):
-            mean_vec = mean_vec + Xtrn_nm[record[i][j],:]
+            mean_vec = mean_vec + Xtrn[record[i][j],:]
         mean_vec = mean_vec / record.shape[1]
         vector.append(mean_vec)
         for j in range(record.shape[1]):
-            a = np.linalg.norm(Xtrn_nm[record[i][j],:]-mean_vec) ### This is much faster than self-defined eucildean distance function
+            a = np.linalg.norm(Xtrn[record[i][j],:]-mean_vec) ### This is much faster than self-defined eucildean distance function
             temp.append(a)
         dis.append(temp)
     dis = np.array(dis) # ->distance (10, 6000)
@@ -175,6 +166,7 @@ def iaml01cw2_q1_4():
     
 
     x = [i for i in range(len(y))]
+    print(len(x))
     plt.plot(x,y)
     plt.xlabel("Number of Principal Compoents (N)")
     plt.ylabel("Cumulative explained variance ratio (R)")
@@ -196,9 +188,12 @@ def iaml01cw2_q1_4():
 # Q1.5
 def iaml01cw2_q1_5():
 
-    pca = PCA()
+    pca = PCA(n_components=10)
     pca.fit(Xtrn_nm)
-    a = pca.fit_transform(Xtrn_nm)
+    a = pca.transform(Xtrn_nm)
+    components = pca.components_
+    print(components.shape)
+
 
     f, axs = plt.subplots(2,5,figsize=(15,6))
 
@@ -206,10 +201,9 @@ def iaml01cw2_q1_5():
     for i in range(2):
         for j in range(5):
             plt.subplot(2, 5, 5* i + j +1,aspect='equal')
-            plt.scatter(a[:,j + 5*i], len(a[:,j + 5*i]) *[0])
-            plt.ylim(-10, 10)
-            plt.xlim(-10,13)
-            plt.title("PC {}".format(5 * i + j +1), y = -0.4)
+            plt.imshow(components[i * 5 +j].reshape((28,28)), cmap = 'gray_r')
+            plt.title("PC {}".format(5 * i + j +1))
+            plt.axis('off')
     plt.savefig("IAML_CW2_Q1_5.png") 
 
 #
@@ -233,17 +227,14 @@ def iaml01cw2_q1_6():
         temp =[]
         
         pca = PCA(n_components=ii)
-        x_reduced = pca.fit_transform(Xtrn_nm)
-        x_recovered = pca.inverse_transform(x_reduced)
-        #print(x_reduced.shape)
-        #print(x_recovered.shape)
-        for j in b:
-            temp.append(sqrt(mse(Xtrn_nm[j,:], x_recovered[j,:])))
+        for jj in range(10):
+            x_reduced = pca.fit_transform(Xtrn_nm[np.where(Ytrn == jj)])
+            x_recovered = pca.inverse_transform(x_reduced)
+            temp.append(sqrt(mse(Xtrn_nm[b[jj],:], x_recovered[0,:])))
         rmse.append(temp)
         
     rmse = np.array(rmse).T
     np.savetxt('Q1_6_ans.txt', rmse)
-
 
 #iaml01cw2_q1_6()   # comment this out when you run the function
 
@@ -265,14 +256,16 @@ def iaml01cw2_q1_7():
         count = count + 1
          
         pca = PCA(n_components=ii)
-        x_reduced = pca.fit_transform(Xtrn_nm)
-        x_recovered = pca.inverse_transform(x_reduced)
+
         count2 = 0
-        for j in b:
+
+        for jj in range(10):
+            x_reduced = pca.fit_transform(Xtrn_nm[np.where(Ytrn == jj)])
+            x_recovered = pca.inverse_transform(x_reduced)
             plt.subplot(10,4, (count -1) + 4 * count2+1)
-            plt.imshow((x_recovered[j,:] + Xmean).reshape((28,28)), cmap ="gray_r")
+            plt.imshow((x_recovered[0,:] + Xmean).reshape((28,28)), cmap ="gray_r")
             plt.axis('off')
-            plt.title("class : {}, K = {}".format(Ytrn[j] , ii), y = -0.4, fontsize=30,fontweight='bold')
+            plt.title("class : {}, K = {}".format(Ytrn[b[jj]] , ii), y = -0.4, fontsize=30,fontweight='bold')
             count2 = count2 + 1
 
     plt.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=0.5,
@@ -314,11 +307,8 @@ def iaml01cw2_q1_8():
     ax.legend(handles, labels, loc='upper right',fontsize = 20)
     plt.xlabel("Principal Component 1",fontsize = 20)
     plt.ylabel("Principal Component 2", fontsize = 20)
-    
     plt.tick_params(labelsize=20)
-    
     plt.savefig("IAML_CW2_Q1_8.png")
-
     plt.show()
 #
-iaml01cw2_q1_8()   # comment this out when you run the function
+#iaml01cw2_q1_8()   # comment this out when you run the function
