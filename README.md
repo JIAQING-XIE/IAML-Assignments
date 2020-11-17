@@ -18,3 +18,14 @@ conda install --file iaml.req
   ```
 
 
+## 2. Coursework 1
+Detailed in folder **IAML_CW1**
+
+
+
+
+## 3. Coursework 2 
+Detailed in folder **IAML_CW2**
+
+
+Wish you have a great journey of viewing my coursework! 
