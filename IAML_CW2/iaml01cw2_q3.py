@@ -186,7 +186,7 @@ def iaml01cw2_q3_4():
 
 
 #
-iaml01cw2_q3_4()   # comment this out when you run the function
+#iaml01cw2_q3_4()   # comment this out when you run the function
 
 # Q3.5
 def iaml01cw2_q3_5():
@@ -214,24 +214,35 @@ def iaml01cw2_q3_5():
 
     #plt.figure()
     
+    print("------- Full Covariance -------")
+    print("train: {}".format(full_train))
+    print("test: {}".format(full_test))
+
+    print("------- Diagonal Covariance -------")
+    print("train: {}".format(diag_train))
+    print("test: {}".format(diag_test))
+
+
 
     plt.scatter(K, diag_train, label = 'train diagonal covariance')
     plt.scatter(K, full_train, label ='train full covariance')
+    '''
     plt.xlabel('number of mixture components (K)', fontsize=10)
     plt.ylabel('per-sample average log-likelihood', fontsize=10)
     plt.title('Training Set', fontsize=10)
 
-
+   '''
     plt.scatter(K, diag_test, label = 'test diagonal covariance')
     plt.scatter(K, full_test, label ='test full covariance')
+ 
     plt.xlabel('number of mixture components (K)', fontsize=10)
     plt.ylabel('per-sample average log-likelihood', fontsize=10)
-    plt.title('Test Set', fontsize=10)
+    plt.title('Language 0', fontsize=10)
     plt.legend()
-    plt.savefig('Q3_5.png')
+    plt.savefig('IAML_CW2_Q3_5.png')
     plt.show()
 
             
 #
-#iaml01cw2_q3_5()   # comment this out when you run the function
-
+iaml01cw2_q3_5()   # comment this out when you run the function
+#

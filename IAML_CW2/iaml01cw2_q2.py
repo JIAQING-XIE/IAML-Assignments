@@ -23,7 +23,7 @@ from sklearn.metrics import accuracy_score,confusion_matrix
 from sklearn.decomposition import PCA
 from sklearn.svm import SVC
 from sklearn.multiclass import OneVsRestClassifier
-from sklearn.model_selection import cross_val_score,KFold
+from sklearn.model_selection import cross_val_score, KFold, StratifiedKFold
 #<----
 
 data_file = os.path.join(os.getcwd(),'data')
@@ -100,11 +100,13 @@ def iaml01cw2_q2_3():
     temp = pca.inverse_transform(a)
     pred = lr.predict(temp)
     pred1 = pred.reshape((100,100))
-    labels = [i for i in range(9)]
-    plt.contourf(X, Y, pred1, levels = labels, cmap = 'coolwarm')
+
+    cmap = plt.get_cmap('coolwarm', 10)
+    labels = [i for i in range(10)]
+    aa = plt.contourf(X, Y, pred1, levels = labels, cmap = cmap)
+    plt.colorbar(aa)
     plt.xlabel("Principal Component 1")
     plt.ylabel("Principal Component 2")
-    plt.colorbar()
     plt.savefig("IAML_CW2_Q2_3.png")
     plt.show()
     
@@ -179,7 +181,8 @@ def iaml01cw2_q2_5():
     for param in c:
         print("param")
         svc = SVC(C=param, kernel='rbf', gamma='auto')
-        arr = cross_val_score(svc,Xsmall,Ysmall,cv=KFold(3))
+        arr = cross_val_score(svc,Xsmall,Ysmall,cv=StratifiedKFold(3))
+        #arr = cross_val_score(svc,Xsmall,Ysmall,cv=KFold(3))
         mean_acc.append(arr.mean())
         if maximum < arr.mean():
             maximum = arr.mean()
@@ -214,5 +217,4 @@ def iaml01cw2_q2_6():
     print("training accuracy:{}".format(accuracy_score(Ytrn,Ytrn_pred)))
     print("test accuracy:{}".format(accuracy_score(Ytst,Ytst_pred)))
 #
-#iaml01cw2_q2_6()   # comment this out when you run the function
-
+iaml01cw2_q2_6()   # comment this out when you run the function

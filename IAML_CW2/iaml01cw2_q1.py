@@ -311,4 +311,4 @@ def iaml01cw2_q1_8():
     plt.savefig("IAML_CW2_Q1_8.png")
     plt.show()
 #
-#iaml01cw2_q1_8()   # comment this out when you run the function
+iaml01cw2_q1_8()   # comment this out when you run the function
