@@ -55,6 +55,6 @@ needs logarithm operation, which costs more time than multiplication operation t
 
 4(b)The model with the best AUC is alg_4 but it doesn't have the best accuracy.In question (a), the threshold is set to 0.5. However, AUC calculates the average accuracies of all threshold value from 0 to 1. We speak of accuracy as the condition where threshold is equal to 0.5 but it only represents one point on AUC curve.Used packages:```python sklearn.metrics.roc_auc_score```
 
-4(c)
+4(c) Used packages: ``` python sklearn.metrics.roc_curve```
 
 
