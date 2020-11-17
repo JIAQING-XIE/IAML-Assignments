@@ -49,3 +49,11 @@ needs logarithm operation, which costs more time than multiplication operation t
  
 3(g)One limitation is that more than half of the coefficients(feature importance) are equal to zero(71/136) according to the reported feature_importances_. It means that those features are not sensitive to label prediction, which is redundant to classifier.
  
+## Question 4
+4(a)Should split
+
+4(b)
+
+4(c)
+
+
