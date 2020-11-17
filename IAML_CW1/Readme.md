@@ -21,3 +21,14 @@ w = T_x.dot(x.T.dot(y)) #w = (x^T x)^-1 (x^T y
 1(f) Report MSE between predicted and raw data. Used packages: ```python sklearn.metrics.mean_squared_error ```
 
 1(g) Using the equation y = Wx + b, plot MSE between the predicted and raw data. All 100 points in total. Used packages: ```python matplotlib.pyplot```
+
+## Question 2
+2(a) You should first preprocess the data into the wanted values by the transformation equation. Then used linear model to fit it.
+Used packages: ```python sklearn.preprocessing.PolynomialFeatures``` and ```python sklearn.linear_model.LinearRegression```
+
+2(b) Report Mean Squared Error, as detailed in Q1. Used packages:```python sklearn.metrics.mean_squared_error ```
+
+2(c) When model hyper-parameter M equals to 3 or 4, they result in almost the same performance and they fit the data well. This can be found in the plot shown in part (a) where fitted curves under these two models are overlapped. Both two models are better than models with M = 1 and M = 2. I would choose the model with M = 3. Firstly it reaches almost the best performance among all four models. Secondly, compared to the fourth model, it has fewer calculation time with the time complex- ity O(N3). It really matters when numbers of input data are large. Moreover, using the model with M = 4 may cause over-fitting problem when encountering unseen data while applying the model with M = 1 and M = 2 can cause under-fitting problem.
+ 
+
+2(d) Just like the process in 2(a). Be careful with the concatenation!!!
