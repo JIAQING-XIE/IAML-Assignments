@@ -1,5 +1,5 @@
 # IAML 2020 - INFR10069 (Level 10) Assignment 1
-This is the repository for Assignment 1 for IAML 2020.
+This is the repository for explaining Assignment 1 for IAML 2020.
 
 ## Question 1
 1(a)  You can have the description of the data by dataframe **A**.describe(). Firstly you should load data with pd.read_csv or pd.read_table. Needed packages: ```python numpy, pandas```
@@ -19,3 +19,5 @@ w = T_x.dot(x.T.dot(y)) #w = (x^T x)^-1 (x^T y
 1(e) The concept of MSE. One limitation is variance-bias trade off. You can find that in the book *The Elements of Statistical Learning*, or just google it. The method is rectified to L1-norm (Lasso) or L2-norm(Ridge)
 
 1(f) Report MSE between predicted and raw data. Used packages: ```python sklearn.metrics.mean_squared_error ```
+
+1(g) Using the equation y = Wx + b, plot MSE between the predicted and raw data. All 100 points in total. Used packages: ```python matplotlib.pyplot```
