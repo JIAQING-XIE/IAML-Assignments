@@ -38,14 +38,14 @@ Used packages: ```python sklearn.preprocessing.PolynomialFeatures``` and ```pyth
 
 3(b) You should calculate mean for each class for each dimension and scatter them. Used packages: ```python matplotlib.pyplot```
 
-3(c) 􏰀M 2
-impurity is represented by Gi = 1 − p . Entropy impurity is represented by
-k=1 i,k
-Hi = 1 − 􏰀Mk=1 pi,k ∗ log2pi,k. One obvious advantage is that entropy calculation
-needs logarithm operation, which costs more time than multiplication operation that is required by Gini impurity. Besides, we know intuitively that it tends to choose the most frequent class of at the branches.
+3(c) The default criteria of deciding the impurity of the node is Gini impurity. One obvious advantage is that entropy calculation
+needs logarithm operation, which costs more time than multiplication operation that is required by Gini impurity. Besides, we know intuitively that it tends to choose the most frequent class of at the branches.(Explanation got full points)
 
-3(d)
+3(d)The potential problem which small values of maximum depth of the tree may occur is that the impurity is high at the top nodes of the tree. It will result in under- fitting problem. Maximum depth with unsuitable large values will cause over-fitting problems. Also, if numbers of data is large, it will spend more time on calculation. Expected time complexity is O(nlgn) since we choose lg(n) features in our tree. Time complexity will become O(n2) if we add more numbers of features to the branches until it reaches the number of maximum input features.(Explanation got full points)
+ 
+3(e)Training three SupportVectorClassifiers with different maximum depths--2, 8 and 20. Used packages: ```python sklearn.tree.DecisionTreeClassifier``` and ```python sklearn.metrics.accuracy_score``` The second model with the maximum depth of 8 preforms best. Since value 8 is the closet to expected maximum depth lg(n) where n is equal to 136. ln(136) is equal to 7.09.
 
-3(e)
-
-3(f)
+3(f)The top three most important attributes are x50, y48 and y29, of which the im- portance is equal to 0.3304, 0.0900 and 0.0883 in order respectively. The attribute with the highest importance is x50. It makes sense since top of the upper lip, whose horizontal value is represented by x50 will extend when one person is smiling. It is common sense although the disparity is not obvious in the figure shown in part(b).
+ 
+3(g)One limitation is that more than half of the coefficients(feature importance) are equal to zero(71/136) according to the reported feature_importances_. It means that those features are not sensitive to label prediction, which is redundant to classifier.
+ 
