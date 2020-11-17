@@ -1,6 +1,6 @@
 # IAML 2020 - INFR10069 (Level 10) Assignment 1
-This is the repository for explaining Assignment 1 for IAML 2020.
-
+This is the repository for explaining Assignment 1 for IAML 2020. (65/80)
+The losed point is due to runnning environment conflicts and two small explanations. So be careful that you are using the scikit-learn==0.19.1
 ## Question 1
 1(a)  You can have the description of the data by dataframe **A**.describe(). Firstly you should load data with pd.read_csv or pd.read_table. Needed packages: ```python numpy, pandas```
 
@@ -32,3 +32,20 @@ Used packages: ```python sklearn.preprocessing.PolynomialFeatures``` and ```pyth
  
 
 2(d) Just like the process in 2(a). Be careful with the concatenation!!!
+
+## Question 3
+3(a) Describe the data as the method in Q1 (a)
+
+3(b) You should calculate mean for each class for each dimension and scatter them. Used packages: ```python matplotlib.pyplot```
+
+3(c) 􏰀M 2
+impurity is represented by Gi = 1 − p . Entropy impurity is represented by
+k=1 i,k
+Hi = 1 − 􏰀Mk=1 pi,k ∗ log2pi,k. One obvious advantage is that entropy calculation
+needs logarithm operation, which costs more time than multiplication operation that is required by Gini impurity. Besides, we know intuitively that it tends to choose the most frequent class of at the branches.
+
+3(d)
+
+3(e)
+
+3(f)
