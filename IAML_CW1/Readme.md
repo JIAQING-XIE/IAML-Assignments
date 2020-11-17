@@ -50,9 +50,10 @@ needs logarithm operation, which costs more time than multiplication operation t
 3(g)One limitation is that more than half of the coefficients(feature importance) are equal to zero(71/136) according to the reported feature_importances_. It means that those features are not sensitive to label prediction, which is redundant to classifier.
  
 ## Question 4
-4(a)Should split
+4(a)Should split into 2 classes by the threshold 0.5. 
+"alg_1" is the best model according to the metrics. However, one limitation is that threshold is fixed. We can try to use different thresholds to improve accuracy. Moreover, we can average the accuracies with selected thresholds. Used packages: ```python sklearn.metrics.accuracy_score``` 
 
-4(b)
+4(b)The model with the best AUC is alg_4 but it doesn't have the best accuracy.In question (a), the threshold is set to 0.5. However, AUC calculates the average accuracies of all threshold value from 0 to 1. We speak of accuracy as the condition where threshold is equal to 0.5 but it only represents one point on AUC curve.Used packages:```python sklearn.metrics.roc_auc_score```
 
 4(c)
 
