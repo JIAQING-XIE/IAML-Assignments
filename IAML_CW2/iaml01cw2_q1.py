@@ -1,6 +1,3 @@
-
-
-
 #--- Code for loading the data set and pre-processing --->
 import numpy as np
 import pandas as pd
@@ -8,6 +5,7 @@ import scipy
 import matplotlib.pyplot as plt
 import seaborn as sns
 import matplotlib.colors as colors
+import matplotlib
 
 import os
 from iaml01cw2_helpers import *
@@ -222,15 +220,15 @@ def iaml01cw2_q1_6():
             b[Ytrn[i]] = i
             a[Ytrn[i]] = a[Ytrn[i]] + 1
     
-
+    
     for ii in K:
         temp =[]
-        
         pca = PCA(n_components=ii)
+        x_reduced = pca.fit_transform(Xtrn_nm)
         for jj in range(10):
-            x_reduced = pca.fit_transform(Xtrn_nm[np.where(Ytrn == jj)])
-            x_recovered = pca.inverse_transform(x_reduced)
-            temp.append(sqrt(mse(Xtrn_nm[b[jj],:], x_recovered[0,:])))
+           
+            x_recovered = pca.inverse_transform(x_reduced[b[jj]])
+            temp.append(sqrt(mse(Xtrn_nm[b[jj],:], x_recovered)))
         rmse.append(temp)
         
     rmse = np.array(rmse).T
@@ -258,12 +256,12 @@ def iaml01cw2_q1_7():
         pca = PCA(n_components=ii)
 
         count2 = 0
-
+        x_reduced = pca.fit_transform(Xtrn_nm)
         for jj in range(10):
-            x_reduced = pca.fit_transform(Xtrn_nm[np.where(Ytrn == jj)])
-            x_recovered = pca.inverse_transform(x_reduced)
+            
+            x_recovered = pca.inverse_transform(x_reduced[b[jj]])
             plt.subplot(10,4, (count -1) + 4 * count2+1)
-            plt.imshow((x_recovered[0,:] + Xmean).reshape((28,28)), cmap ="gray_r")
+            plt.imshow((x_recovered + Xmean).reshape((28,28)), cmap ="gray_r")
             plt.axis('off')
             plt.title("class : {}, K = {}".format(Ytrn[b[jj]] , ii), y = -0.4, fontsize=30,fontweight='bold')
             count2 = count2 + 1
@@ -284,7 +282,7 @@ def iaml01cw2_q1_8():
 
     pca = PCA(n_components=2)
     x_reduced = pca.fit_transform(Xtrn_nm)
-    plt.figure(figsize=(20,20))
+    plt.figure(figsize=(9,8))
     ax = plt.subplot(1,1,1,)
 
     
@@ -294,21 +292,19 @@ def iaml01cw2_q1_8():
     values = range(10)
     cNorm  = colors.Normalize(vmin=0, vmax=values[-1])
     scaMap = plt.cm.ScalarMappable(norm = cNorm  ,cmap = "coolwarm")
+
+
     for i in range(10):
         colorval = scaMap.to_rgba(values[i])
-        ax.scatter(x_reduced[np.where(Ytrn == i),0].reshape((6000,)), x_reduced[np.where(Ytrn == i),1].reshape((6000,)),label = i, s =2, color = colorval)
-    #ax.scatter(x_reduced[:,0], x_reduced[:,1], s =2, c = Ytrn ,cmap="coolwarm")
-    
-
-
+        ax.scatter(x_reduced[np.where(Ytrn == i),0].reshape((6000,)), x_reduced[np.where(Ytrn == i),1].reshape((6000,)),label = i, s =3, color = colorval)
 
 
     handles,labels = ax.get_legend_handles_labels()
-    ax.legend(handles, labels, loc='upper right',fontsize = 20)
-    plt.xlabel("Principal Component 1",fontsize = 20)
-    plt.ylabel("Principal Component 2", fontsize = 20)
-    plt.tick_params(labelsize=20)
+    ax.legend(handles, labels, loc='upper right',fontsize = 10)
+    plt.xlabel("Principal Component 1",fontsize = 12)
+    plt.ylabel("Principal Component 2", fontsize = 12)
+    plt.tick_params(labelsize=12)
     plt.savefig("IAML_CW2_Q1_8.png")
     plt.show()
 #
-iaml01cw2_q1_8()   # comment this out when you run the function
+#iaml01cw2_q1_8()   # comment this out when you run the function

@@ -76,7 +76,7 @@ def iaml01cw2_q3_2():
     centers = kmeans.cluster_centers_
     
 
-    pca = PCA(n_components=2)
+    pca = PCA()
     zz = pca.fit_transform(mean_vector) # PCA on mean vector 
     center_ = pca.transform(centers)
     lang =[i for i in range(22)]
@@ -200,7 +200,7 @@ def iaml01cw2_q3_5():
 
     for k in K:
         for covtype in cov_type:
-            model = GaussianMixture(n_components=k,covariance_type=covtype)
+            model = GaussianMixture(n_components=k,covariance_type=covtype, random_state = 1)
             model.fit(Xtrn[np.where(Ytrn == 0)])
             #print(model.score(Xtrn[np.where(Ytrn == 0)]))
             score_train = model.score(Xtrn[np.where(Ytrn == 0)])
@@ -244,5 +244,5 @@ def iaml01cw2_q3_5():
 
             
 #
-iaml01cw2_q3_5()   # comment this out when you run the function
+#iaml01cw2_q3_5()   # comment this out when you run the function
 #

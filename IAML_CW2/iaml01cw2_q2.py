@@ -101,17 +101,19 @@ def iaml01cw2_q2_3():
     pred = lr.predict(temp)
     pred1 = pred.reshape((100,100))
 
+    plt.figure(figsize=(8,6))
     cmap = plt.get_cmap('coolwarm', 10)
     labels = [i for i in range(10)]
     aa = plt.contourf(X, Y, pred1, levels = labels, cmap = cmap)
     plt.colorbar(aa)
+    #cbar.set_label('Class Number from 0 to 9')
     plt.xlabel("Principal Component 1")
     plt.ylabel("Principal Component 2")
     plt.savefig("IAML_CW2_Q2_3.png")
     plt.show()
     
 #
-#iaml01cw2_q2_3()   # comment this out when you run the function
+iaml01cw2_q2_3()   # comment this out when you run the function
 
 # Q2.4
 def iaml01cw2_q2_4():
@@ -191,8 +193,9 @@ def iaml01cw2_q2_5():
     print("--------- Optimal Value --------")
     print("Optimal C: {}".format(optimum_c))
     print("Best Mean Accuracy: {}".format(maximum))
-
-    plt.scatter(b,mean_acc)
+    f, axs = plt.subplots(1,1,figsize=(8,5))
+    plt.scatter(c,mean_acc)
+    axs.set_xscale('log')
     plt.xlabel("log-scale of C")
     plt.ylabel("mean accuracy (CV)")
     plt.savefig("IAML_CW2_Q2_5.png")
@@ -217,4 +220,4 @@ def iaml01cw2_q2_6():
     print("training accuracy:{}".format(accuracy_score(Ytrn,Ytrn_pred)))
     print("test accuracy:{}".format(accuracy_score(Ytst,Ytst_pred)))
 #
-iaml01cw2_q2_6()   # comment this out when you run the function
+#iaml01cw2_q2_6()   # comment this out when you run the function
