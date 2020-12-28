@@ -28,4 +28,4 @@ Detailed in folder **IAML_CW1**
 Detailed in folder **IAML_CW2**
 
 
-Wish you have a great journey of viewing my coursework! 
+Wish you have a great journey of viewing my coursework!  (total 44/50 ~ 88/100)
